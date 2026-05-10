@@ -1,0 +1,13 @@
+[
+    { "id": 1, "name": "Veg Momos", "desc": "Steamed dumplings with fresh veggies.", "price": 80, "category": "Fast Food" },
+    { "id": 2, "name": "Chicken Momos", "desc": "Juicy steamed dumplings stuffed with minced chicken.", "price": 120, "category": "Fast Food" },
+    { "id": 3, "name": "Kurkure Momos", "desc": "Crispy fried momos tossed in special spices.", "price": 140, "category": "Fast Food" },
+    { "id": 4, "name": "Paneer Roll", "desc": "Spicy paneer tikka wrapped in a soft paratha.", "price": 110, "category": "Rolls" },
+    { "id": 5, "name": "Chicken Egg Roll", "desc": "Double egg and spicy chicken chunks wrapped together.", "price": 150, "category": "Rolls" },
+    { "id": 6, "name": "White Sauce Pasta", "desc": "Creamy cheesy pasta with herbs and olives.", "price": 180, "category": "Pasta" },
+    { "id": 7, "name": "Red Sauce Pasta", "desc": "Tangy tomato arrabbiata pasta with exotic veggies.", "price": 160, "category": "Pasta" },
+    { "id": 8, "name": "Grilled Sandwich", "desc": "Stuffed with cheese, corn, and capsicum.", "price": 90, "category": "Sandwich" },
+    { "id": 9, "name": "Chicken Tikka Sandwich", "desc": "Loaded with grilled chicken and tandoori mayo.", "price": 130, "category": "Sandwich" },
+    { "id": 10, "name": "Cold Coffee", "desc": "Classic thick cold coffee with a scoop of vanilla.", "price": 100, "category": "Beverages" },
+    { "id": 11, "name": "Virgin Mojito", "desc": "Refreshing mint and lemon cooler.", "price": 90, "category": "Beverages" }
+]

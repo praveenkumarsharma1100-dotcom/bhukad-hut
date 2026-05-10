@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhukad Hut - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #FF5A00;
+            --bg-dark: #121212;
+            --bg-card: #1E1E1E;
+            --text-main: #FFFFFF;
+            --text-muted: #A0A0A0;
+            --border-color: #333333;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 { margin: 0; color: var(--primary); }
+
+        .auth-container {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        input[type="text"], input[type="password"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover { background: #E04E00; }
+        
+        button.danger { background: #ff4444; }
+
+        .menu-list { display: none; }
+        
+        .menu-item-row {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--primary);
+        }
+
+        #github-instructions {
+            text-align: left;
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Admin Panel</h1>
+        <div class="actions">
+            <button id="add-btn" style="display:none;" onclick="addNewItem()"><i class="ph ph-plus"></i> Add Dish</button>
+            <button id="save-btn" style="display:none;" onclick="saveToGithub()"><i class="ph ph-floppy-disk"></i> Publish Changes</button>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="auth-screen" class="auth-container">
+        <h2>GitHub Authentication</h2>
+        <p style="color: var(--text-muted)">Because your website is hosted on GitHub, you need to provide a GitHub Access Token to update the menu database.</p>
+        
+        <input type="password" id="github-token" placeholder="Paste your GitHub Personal Access Token here...">
+        <button onclick="login()">Login & Load Menu</button>
+
+        <div id="github-instructions">
+            <b>How to get your token:</b>
+            <ol>
+                <li>Go to <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:var(--primary)">GitHub Fine-grained Tokens</a></li>
+                <li>Click <b>Generate new token</b></li>
+                <li>Name it "Bhukad Hut Admin"</li>
+                <li>Under <b>Repository Access</b>, select "Only select repositories" and pick `bhukad-hut`</li>
+                <li>Under <b>Permissions -> Repository Permissions</b>, find <b>Contents</b> and change it to <b>Read and write</b></li>
+                <li>Click Generate at the bottom, and paste the code here!</li>
+            </ol>
+        </div>
+    </div>
+
+    <div id="loader" class="loader">
+        <h2 id="loader-text">Loading menu...</h2>
+    </div>
+
+    <!-- Menu Editor -->
+    <div id="menu-editor" class="menu-list">
+        <div id="items-container"></div>
+    </div>
+</div>
+
+<script>
+    const REPO_OWNER = 'praveenkumarsharma1100-dotcom';
+    const REPO_NAME = 'bhukad-hut';
+    const FILE_PATH = 'menu.json';
+    
+    let token = '';
+    let menuData = [];
+    let fileSha = '';
+
+    async function login() {
+        token = document.getElementById('github-token').value.trim();
+        if(!token) return alert('Please enter your GitHub token!');
+
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('loader').style.display = 'block';
+
+        try {
+            const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if(res.status === 401) throw new Error("Invalid Token! Make sure you gave it 'Contents: Read/Write' permission.");
+            if(!res.ok) throw new Error("Could not find menu.json in your repository.");
+
+            const data = await res.json();
+            fileSha = data.sha;
+            
+            // Decode base64 content
+            const content = decodeURIComponent(escape(atob(data.content)));
+            menuData = JSON.parse(content);
+            
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('menu-editor').style.display = 'block';
+            document.getElementById('save-btn').style.display = 'block';
+            document.getElementById('add-btn').style.display = 'block';
+            
+            renderEditor();
+        } catch(err) {
+            alert(err.message);
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'block';
+        }
+    }
+
+    function renderEditor() {
+        const container = document.getElementById('items-container');
+        container.innerHTML = '';
+
+        menuData.forEach((item, index) => {
+            const row = document.createElement('div');
+            row.className = 'menu-item-row';
+            row.innerHTML = `
+                <input type="text" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)" placeholder="Dish Name">
+                <input type="number" value="${item.price}" onchange="updateItem(${index}, 'price', this.value)" placeholder="Price (₹)">
+                <input type="text" value="${item.category}" onchange="updateItem(${index}, 'category', this.value)" placeholder="Category">
+                <input type="text" value="${item.desc}" onchange="updateItem(${index}, 'desc', this.value)" placeholder="Description">
+                <button class="danger" onclick="deleteItem(${index})"><i class="ph ph-trash"></i></button>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function updateItem(index, field, value) {
+        if(field === 'price') value = parseInt(value) || 0;
+        menuData[index][field] = value;
+    }
+
+    function deleteItem(index) {
+        if(confirm('Are you sure you want to delete this item?')) {
+            menuData.splice(index, 1);
+            renderEditor();
+        }
+    }
+
+    function addNewItem() {
+        const newId = menuData.length > 0 ? Math.max(...menuData.map(i => i.id)) + 1 : 1;
+        menuData.push({
+            id: newId,
+            name: 'New Dish',
+            desc: 'Description here',
+            price: 100,
+            category: 'Fast Food'
+        });
+        renderEditor();
+    }
+
+    async function saveToGithub() {
+        const loader = document.getElementById('loader');
+        const loaderText = document.getElementById('loader-text');
+        
+        document.getElementById('menu-editor').style.display = 'none';
+        loader.style.display = 'block';
+        loaderText.textContent = "Publishing to website... Please wait!";
+
+        try {
+            // Encode nicely formatted JSON to base64
+            const contentStr = JSON.stringify(menuData, null, 4);
+            const base64Content = btoa(unescape(encodeURIComponent(contentStr)));
+
+            const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'Update menu data from Admin Panel',
+                    content: base64Content,
+                    sha: fileSha
+                })
+            });
+
+            if(!res.ok) throw new Error("Failed to save changes.");
+
+            const data = await res.json();
+            fileSha = data.content.sha; // Update SHA for next save
+
+            alert("Success! Your live website will update in about 60 seconds.");
+            
+            loader.style.display = 'none';
+            document.getElementById('menu-editor').style.display = 'block';
+        } catch(err) {
+            alert(err.message);
+            loader.style.display = 'none';
+            document.getElementById('menu-editor').style.display = 'block';
+        }
+    }
+</script>
+</body>
+</html>
