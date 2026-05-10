@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhukad Hut - Menu & Order</title>
+    <meta name="description" content="Welcome to Bhukad Hut, Hapur. Order your favorite fast food, rolls, pasta, and more.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <!-- Main Application Page -->
+    <div id="main-page">
+        <!-- Home / Hero Section -->
+        <header class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="brand-title">Bhukad Hut</h1>
+                <p class="brand-subtitle">Hapur's Favorite Spot</p>
+            </div>
+        </header>
+
+        <!-- Order Type Toggle -->
+        <div class="order-type-container">
+            <div class="order-type-toggle">
+                <button class="toggle-btn active" id="btn-dine-in" onclick="setOrderType('Dine-In')">
+                    <i class="ph ph-fork-knife"></i> Dine In
+                </button>
+                <button class="toggle-btn" id="btn-takeaway" onclick="setOrderType('Takeaway')">
+                    <i class="ph ph-tote"></i> Takeaway
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Scroll -->
+        <div class="categories-wrapper">
+            <div class="categories" id="categories-container">
+                <!-- Categories injected by JS -->
+            </div>
+        </div>
+
+        <!-- Menu Items List -->
+        <main class="menu-container" id="menu-container">
+            <!-- Items injected by JS -->
+        </main>
+        
+        <div class="spacer"></div>
+    </div>
+
+    <!-- Floating Cart Bar -->
+    <div id="cart-bar" class="cart-bar hidden" onclick="toggleCartModal()">
+        <div class="cart-info">
+            <i class="ph ph-shopping-cart"></i>
+            <span id="cart-count">0 items</span>
+        </div>
+        <div class="cart-total">
+            <span id="cart-total-price">₹0</span>
+            <i class="ph ph-caret-up"></i>
+        </div>
+    </div>
+
+    <!-- Cart Modal Screen -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-modal-content">
+            <div class="cart-header">
+                <h2>Your Order</h2>
+                <button class="close-btn" onclick="toggleCartModal()">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+            
+            <div class="order-type-display">
+                Order Type: <span id="modal-order-type" class="highlight-text">Dine-In</span>
+            </div>
+
+            <div class="cart-items" id="cart-items-container">
+                <!-- Cart Items injected by JS -->
+            </div>
+            <div class="cart-footer">
+                <div class="total-row">
+                    <span>Total Amount</span>
+                    <strong id="modal-total-price">₹0</strong>
+                </div>
+                <button class="btn-primary" onclick="placeOrder()">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Success Screen -->
+    <div id="success-screen" class="success-screen hidden">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="ph-fill ph-check-circle"></i>
+            </div>
+            <h2>Order Placed!</h2>
+            <p>Your order has been successfully recorded.</p>
+            <p class="order-id">Order ID: <span id="random-order-id"></span></p>
+            <p class="order-id">Type: <span id="success-order-type"></span></p>
+            <button class="btn-secondary" onclick="startNewOrder()">Start New Order</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   BHUKAD HUT — Rajasthani Theme
+   ============================================ */
+
+@layer base {
+  :root {
+    --color-primary: 25 85% 55%;
+    --color-secondary: 15 65% 45%;
+    --color-accent: 45 90% 45%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-body text-clay-900 antialiased;
+    background-color: #faf8f5;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30h60M30 0v60' stroke='%23e8d5b8' stroke-width='0.4' opacity='0.25' fill='none'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  /* Gradient Overlays */
+  .gradient-warm {
+    background: linear-gradient(135deg, #be5a28 0%, #e8822a 50%, #d9a80a 100%);
+  }
+
+  .gradient-dark {
+    background: linear-gradient(135deg, #2d1810 0%, #4a2518 50%, #6e3716 100%);
+  }
+
+  .gradient-gold {
+    background: linear-gradient(135deg, #d9a80a 0%, #facc15 50%, #fef08a 100%);
+  }
+
+  /* Glass Card */
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-clay-200 shadow-lg;
+  }
+
+  /* Warm Card */
+  .warm-card {
+    @apply bg-white rounded-classical border border-clay-200 shadow-md 
+           hover:shadow-xl hover:border-saffron-300 
+           transition-all duration-300 ease-out;
+  }
+
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-saffron-500 text-white font-bold px-6 py-3 rounded-classical
+           hover:bg-saffron-600 active:scale-[0.98]
+           transition-all duration-200 shadow-md hover:shadow-lg
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent text-saffron-600 font-bold px-6 py-3 rounded-classical
+           border-2 border-saffron-500
+           hover:bg-saffron-50 active:scale-[0.98]
+           transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-clay-600 font-medium px-4 py-2 rounded-classical
+           hover:bg-clay-100 active:scale-[0.98]
+           transition-all duration-200;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider;
+  }
+
+  .badge-pending {
+    @apply bg-yellow-100 text-yellow-800 border border-yellow-300;
+  }
+
+  .badge-preparing {
+    @apply bg-blue-100 text-blue-800 border border-blue-300;
+  }
+
+  .badge-ready {
+    @apply bg-green-100 text-green-800 border border-green-300;
+  }
+
+  .badge-completed {
+    @apply bg-gray-100 text-gray-600 border border-gray-300;
+  }
+
+  /* Category Pill */
+  .category-pill {
+    @apply px-5 py-2 rounded-full text-sm font-bold border-2 cursor-pointer
+           transition-all duration-200 whitespace-nowrap select-none;
+  }
+
+  .category-pill-active {
+    @apply bg-saffron-500 text-white border-saffron-500 shadow-md;
+  }
+
+  .category-pill-inactive {
+    @apply bg-white text-clay-600 border-clay-300
+           hover:border-saffron-400 hover:text-saffron-600;
+  }
+
+  /* Input styles */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-classical border border-clay-300
+           bg-white text-clay-900 font-body
+           focus:outline-none focus:ring-2 focus:ring-saffron-400 focus:border-saffron-400
+           placeholder:text-clay-400
+           transition-all duration-200;
+  }
+
+  /* Stat Card */
+  .stat-card {
+    @apply bg-white rounded-lg p-6 border border-clay-200 shadow-sm
+           hover:shadow-md transition-shadow duration-200;
+  }
+
+  /* Pulse dot animation */
+  .pulse-dot {
+    @apply relative;
+  }
+  .pulse-dot::before {
+    content: "";
+    @apply absolute -top-1 -right-1 w-3 h-3 bg-saffron-500 rounded-full;
+    animation: pulse-ring 1.5s ease-out infinite;
+  }
+
+  /* Shimmer loading */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+  .shimmer::after {
+    content: "";
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+@layer utilities {
+  /* Text gradient */
+  .text-gradient-warm {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #be5a28, #e8822a, #d9a80a);
+  }
+
+  /* Scrollbar hide */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Animations */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out both;
+}
